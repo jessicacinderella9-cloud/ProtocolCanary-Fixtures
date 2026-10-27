@@ -206,6 +206,82 @@ method = "get-network"
         report = self.run_validation({"a.toml": good})
         self.assertEqual(report.errors, [])
 
+    def test_accepts_valid_field_one_of_assertion(self) -> None:
+        good = VALID_RPC + (
+            '\n[[assert]]\nkind = "field-one-of"\nfield = "status"\n'
+            'allowed_values = ["healthy", "degraded"]\n'
+        )
+        report = self.run_validation({"a.toml": good})
+        self.assertEqual(report.errors, [])
+
+    def test_field_one_of_requires_allowed_values(self) -> None:
+        bad = VALID_RPC + '\n[[assert]]\nkind = "field-one-of"\nfield = "status"\n'
+        report = self.run_validation({"a.toml": bad})
+        self.assertTrue(
+            any("field-one-of" in e and "allowed_values" in e for e in report.errors)
+        )
+
+    def test_field_one_of_rejects_empty_allowed_values(self) -> None:
+        bad = VALID_RPC + (
+            '\n[[assert]]\nkind = "field-one-of"\nfield = "status"\n'
+            'allowed_values = []\n'
+        )
+        report = self.run_validation({"a.toml": bad})
+        self.assertTrue(
+            any("field-one-of" in e and "allowed_values" in e for e in report.errors)
+        )
+
+    def test_accepts_valid_field_range_assertion(self) -> None:
+        good = VALID_RPC + (
+            '\n[[assert]]\nkind = "field-range"\nfield = "latestLedger"\n'
+            'min = 1\nmax = 99999999\n'
+        )
+        report = self.run_validation({"a.toml": good})
+        self.assertEqual(report.errors, [])
+
+    def test_field_range_requires_min_and_max(self) -> None:
+        bad = VALID_RPC + (
+            '\n[[assert]]\nkind = "field-range"\nfield = "latestLedger"\nmin = 1\n'
+        )
+        report = self.run_validation({"a.toml": bad})
+        self.assertTrue(
+            any("field-range" in e and "min" in e and "max" in e for e in report.errors)
+        )
+
+    def test_field_range_rejects_min_greater_than_max(self) -> None:
+        bad = VALID_RPC + (
+            '\n[[assert]]\nkind = "field-range"\nfield = "latestLedger"\n'
+            'min = 100\nmax = 10\n'
+        )
+        report = self.run_validation({"a.toml": bad})
+        self.assertTrue(
+            any("min" in e and "max" in e and "greater" in e for e in report.errors)
+        )
+
+    def test_accepts_rpc_fixture_with_request_table(self) -> None:
+        good = VALID_RPC.replace(
+            'method = "get-network"',
+            'method = "get-network"\n\n[request]\nmethod = "get-network"\nparams = []',
+        )
+        report = self.run_validation({"a.toml": good})
+        self.assertEqual(report.errors, [])
+
+    def test_rejects_request_with_unknown_method(self) -> None:
+        bad = VALID_RPC.replace(
+            'method = "get-network"',
+            'method = "get-network"\n\n[request]\nmethod = "get-events"',
+        )
+        report = self.run_validation({"a.toml": bad})
+        self.assertTrue(any("request.method" in e for e in report.errors))
+
+    def test_rejects_request_with_non_array_params(self) -> None:
+        bad = VALID_RPC.replace(
+            'method = "get-network"',
+            'method = "get-network"\n\n[request]\nmethod = "get-network"\nparams = "oops"',
+        )
+        report = self.run_validation({"a.toml": bad})
+        self.assertTrue(any("request.params" in e for e in report.errors))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,8 @@
+{
+  "type": "scval_depth",
+  "description": "Empty Map vector",
+  "scval": {
+    "kind": "m",
+    "m": {}
+  }
+}

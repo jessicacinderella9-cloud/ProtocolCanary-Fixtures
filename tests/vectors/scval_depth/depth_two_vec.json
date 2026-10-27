@@ -1,0 +1,18 @@
+{
+  "type": "scval_depth",
+  "description": "Depth 2: Vec of Vec",
+  "scval": {
+    "kind": "v",
+    "v": [
+      {
+        "kind": "v",
+        "v": [
+          {
+            "kind": "i",
+            "i": 1
+          }
+        ]
+      }
+    ]
+  }
+}

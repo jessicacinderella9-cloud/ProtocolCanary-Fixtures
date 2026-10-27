@@ -1,0 +1,13 @@
+{
+  "type": "scval_depth",
+  "description": "Nested Vec with one element",
+  "scval": {
+    "kind": "v",
+    "v": [
+      {
+        "kind": "i",
+        "i": 42
+      }
+    ]
+  }
+}

@@ -96,6 +96,19 @@
             "type": "string",
             "enum": ["get-network", "get-latest-ledger"]
           },
+          "request": {
+            "type": "object",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": ["get-network", "get-latest-ledger"]
+              },
+              "params": {
+                "type": "array"
+              }
+            },
+            "required": ["method"]
+          },
           "assert": {
             "type": "array",
             "minItems": 1,
@@ -105,13 +118,26 @@
               "properties": {
                 "kind": {
                   "type": "string",
-                  "enum": ["field-exists", "field-type", "field-equals"]
+                  "enum": ["field-exists", "field-type", "field-equals", "field-one-of", "field-range"]
                 },
                 "field": { "type": "string", "minLength": 1 },
                 "value": {},
                 "expected_type": {
                   "type": "string",
                   "enum": ["string", "integer", "boolean", "array", "object"]
+                },
+                "allowed_values": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Required when kind = field-one-of"
+                },
+                "min": {
+                  "type": "number",
+                  "description": "Required when kind = field-range"
+                },
+                "max": {
+                  "type": "number",
+                  "description": "Required when kind = field-range"
                 }
               }
             }

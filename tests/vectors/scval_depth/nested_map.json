@@ -1,0 +1,13 @@
+{
+  "type": "scval_depth",
+  "description": "Nested Map with one entry",
+  "scval": {
+    "kind": "m",
+    "m": {
+      "some_key": {
+        "kind": "i",
+        "i": 123
+      }
+    }
+  }
+}

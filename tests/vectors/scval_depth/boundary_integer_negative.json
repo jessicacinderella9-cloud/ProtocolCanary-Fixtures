@@ -1,0 +1,8 @@
+{
+  "type": "scval_depth",
+  "description": "Boundary integer value at i64 min",
+  "scval": {
+    "kind": "i",
+    "i": -9223372036854775808
+  }
+}

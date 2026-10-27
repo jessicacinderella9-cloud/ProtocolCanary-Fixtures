@@ -1,0 +1,8 @@
+{
+  "type": "scval_depth",
+  "description": "Empty Vec vector",
+  "scval": {
+    "kind": "v",
+    "v": []
+  }
+}

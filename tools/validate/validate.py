@@ -32,7 +32,7 @@ SURFACES = {"xdr", "rpc", "soroban"}
 XDR_TYPES = {"StellarValue", "ContractExecutable"}
 XDR_KINDS = {"decode-success", "decode-failure", "roundtrip", "encode-equals"}
 RPC_METHODS = {"get-network", "get-latest-ledger"}
-RPC_ASSERT_KINDS = {"field-exists", "field-type", "field-equals"}
+RPC_ASSERT_KINDS = {"field-exists", "field-type", "field-equals", "field-one-of", "field-range"}
 RPC_ASSERT_TYPES = {"string", "integer", "boolean", "array", "object"}
 SOROBAN_EXPECT_KINDS = {"simulation-success", "simulation-error"}
 CAPABILITIES = {
@@ -208,6 +208,23 @@ def validate_rpc_body(fx: Fixture, report: Report) -> None:
             path, f"field 'method' must be one of {sorted(RPC_METHODS)}, got {data['method']!r}"
         )
 
+    if "request" in data:
+        request = data["request"]
+        if not isinstance(request, dict):
+            report.error(path, "field 'request' must be a table")
+        else:
+            request_method = request.get("method")
+            if not isinstance(request_method, str) or not request_method:
+                report.error(path, "field 'request.method' must be a non-empty string")
+            elif request_method not in RPC_METHODS:
+                report.error(
+                    path,
+                    f"field 'request.method' must be one of {sorted(RPC_METHODS)}, "
+                    f"got {request_method!r}",
+                )
+            if "params" in request and not isinstance(request["params"], list):
+                report.error(path, "field 'request.params' must be an array")
+
     if "assert" not in data:
         report.error(path, "rpc fixture must define at least one [[assert]] table")
         return
@@ -237,6 +254,19 @@ def validate_rpc_body(fx: Fixture, report: Report) -> None:
                     f"assert[{i}].expected_type must be one of {sorted(RPC_ASSERT_TYPES)}, "
                     f"got {expected_type!r}",
                 )
+        if kind == "field-one-of":
+            if "allowed_values" not in a or not isinstance(a["allowed_values"], list) or not a["allowed_values"]:
+                report.error(path, f"assert[{i}] with kind=field-one-of requires 'allowed_values' array")
+        if kind == "field-range":
+            if "min" not in a or "max" not in a:
+                report.error(path, f"assert[{i}] with kind=field-range requires 'min' and 'max' numbers")
+            elif isinstance(a["min"], (int, float)) and isinstance(a["max"], (int, float)):
+                if a["min"] > a["max"]:
+                    report.error(
+                        path,
+                        f"assert[{i}] with kind=field-range has min ({a['min']}) greater "
+                        f"than max ({a['max']})",
+                    )
 
 
 def validate_soroban_body(fx: Fixture, report: Report) -> None:

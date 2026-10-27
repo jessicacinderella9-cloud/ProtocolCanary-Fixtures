@@ -1,0 +1,8 @@
+{
+  "type": "scval_depth",
+  "description": "Address kind ScVal",
+  "scval": {
+    "kind": "a",
+    "a": "GB7GJHHYJIL7EJTBBDG3QS4ZD77YXFI3MHUTQ763KQ3JAR3YEQT3D6I6Q"
+  }
+}

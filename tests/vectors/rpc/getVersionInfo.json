@@ -1,0 +1,14 @@
+{
+  "type": "rpc_response",
+  "rpc_method": "getVersionInfo",
+  "jsonrpc": "2.0",
+  "id": 3,
+  "result": {
+    "protocolVersion": 28,
+    "networkVersion": 28,
+    "networkPassphrase": "Test SDF Network ; September 2015",
+    "serverName": "Friendbot",
+    "serverVersion": "28.0.0",
+    "state": "healthy"
+  }
+}

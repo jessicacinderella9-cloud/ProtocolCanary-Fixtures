@@ -1,0 +1,15 @@
+{
+  "type": "rpc_response",
+  "rpc_method": "getFeeStats",
+  "jsonrpc": "2.0",
+  "id": 5,
+  "result": {
+    "protocolVersion": 28,
+    "feePool": "GABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJ",
+    "baseFee": "100",
+    "baseReserve": "20000000",
+    "minTransactionFee": "100",
+    "annualBaseFee": "5256000000",
+    "networkPassphrase": "Test SDF Network ; September 2015"
+  }
+}

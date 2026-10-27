@@ -1,0 +1,13 @@
+{
+  "type": "rpc_response",
+  "rpc_method": "getHealth",
+  "jsonrpc": "2.0",
+  "id": 4,
+  "result": {
+    "status": "healthy",
+    "protocolVersion": 28,
+    "ledgerCurrent": 567890,
+    "ledgerPrevious": 567889,
+    "auth": "full"
+  }
+}
